@@ -1,7 +1,7 @@
 {
-  "name": "tistats",
+  "name": "ti-stats-hook",
   "version": "0.0.1",
-  "description": "tistats",
+  "description": "ti-stats-hook",
   "scripts": {
     "postinstall": "node bin/install"
   },
