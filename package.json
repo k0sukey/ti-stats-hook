@@ -1,0 +1,28 @@
+{
+  "name": "tistats",
+  "version": "0.0.1",
+  "description": "tistats",
+  "scripts": {
+    "postinstall": "node bin/install"
+  },
+  "bin": {
+    "ti-stats-hook": "./bin/install"
+  },
+  "keywords": [
+    "titanium",
+    "cli",
+    "appcelerator",
+    "hook"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/k0sukey/ti-stats-hook.git"
+  },
+  "author": "Kosuke Isobe",
+  "license": "MIT",
+  "dependencies": {
+    "blessed": "0.0.38",
+    "blessed-contrib": "0.0.6",
+    "lodash": "^3.0.0"
+  }
+}

@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+
+var spawn = require('child_process').spawn,
+	path = require('path');
+
+var hook = spawn('ti', [
+		'config',
+		'-a',
+		'paths.hooks',
+		path.join(__dirname, '..', 'plugin', 'be.k0suke.tistats', 'hooks')
+	]);
+
+hook.stderr.pipe(process.stderr);
+
+hook.on('exit', function(code) {
+	code === 0 && console.log('tistats hook installed');
+});
