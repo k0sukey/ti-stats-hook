@@ -12,10 +12,6 @@ $ npm install -g ti-stats-hook
 
 ## Usage
 
-1. Install the [TiStats module](https://github.com/k0sukey/TiStats)
-2. Load ```require('be.k0suke.tistats');``` on app.js or alloy.js
-3. Build!
-
 ```
 $ ti build -p ios --retina --tall --tistats localhost:8888
 ```
