@@ -1,6 +1,6 @@
 {
   "name": "ti-stats-hook",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "ti-stats-hook",
   "scripts": {
     "postinstall": "node bin/install"
@@ -21,8 +21,11 @@
   "author": "Kosuke Isobe",
   "license": "MIT",
   "dependencies": {
+    "adm-zip": "^0.4.4",
     "blessed": "0.0.38",
     "blessed-contrib": "0.0.6",
-    "lodash": "^3.0.0"
+    "fs-extra": "^0.16.3",
+    "lodash": "^3.0.0",
+    "tiapp.xml": "^0.2.2"
   }
 }
