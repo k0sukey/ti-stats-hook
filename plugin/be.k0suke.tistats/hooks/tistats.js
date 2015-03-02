@@ -13,7 +13,7 @@ var DEBUG = false;
 var TI_STATS_ZIP = 'be.k0suke.tistats-iphone-1.0.1.zip',
 	TI_STATS_VER = '1.0.1';
 
-var screen, grid, logger;
+var logger;
 
 exports.cliVersion = '>=3.2';
 exports.init = function(_logger, config, cli, appc){
@@ -35,103 +35,6 @@ exports.init = function(_logger, config, cli, appc){
 		}
 
 		if (!DEBUG) {
-			screen = blessed.screen();
-			grid = new contrib.grid({
-					rows: 4,
-					cols: 2
-				});
-
-			grid.set(0, 0, contrib.line, {
-				style: {
-					line: "yellow",
-					text: "green",
-					baseline: "black"
-				},
-				xLabelPadding: 10,
-				xPadding: 12,
-				label: ' Views in App '
-			});
-
-			grid.set(0, 1, contrib.line, {
-				style: {
-					line: "yellow",
-					text: "green",
-					baseline: "black"
-				},
-				xLabelPadding: 10,
-				xPadding: 12,
-				label: ' Free Memory [MB] '
-			});
-
-			grid.set(1, 0, contrib.line, {
-				style: {
-					line: "yellow",
-					text: "green",
-					baseline: "black"
-				},
-				xLabelPadding: 10,
-				xPadding: 12,
-				label: ' Resident Size / msec [MB] '
-			});
-
-			grid.set(1, 1, contrib.line, {
-				style: {
-					line: "yellow",
-					text: "green",
-					baseline: "black"
-				},
-				xLabelPadding: 10,
-				xPadding: 12,
-				label: ' Resident Size [MB] '
-			});
-
-			grid.set(2, 0, contrib.line, {
-				style: {
-					line: "yellow",
-					text: "green",
-					baseline: "black"
-				},
-				xLabelPadding: 10,
-				xPadding: 12,
-				label: ' Virtual Size / msec [MB] '
-			});
-
-			grid.set(2, 1, contrib.line, {
-				style: {
-					line: "yellow",
-					text: "green",
-					baseline: "black"
-				},
-				xLabelPadding: 10,
-				xPadding: 12,
-				label: ' Virtual Size [MB] '
-			});
-
-			grid.set(3, 0, contrib.line, {
-				style: {
-					line: "yellow",
-					text: "green",
-					baseline: "black"
-				},
-				xLabelPadding: 10,
-				xPadding: 12,
-				label: ' User Time [msec] '
-			});
-
-			grid.set(3, 1, contrib.line, {
-				style: {
-					line: "yellow",
-					text: "green",
-					baseline: "black"
-				},
-				xLabelPadding: 10,
-				xPadding: 12,
-				label: ' System Time [msec] '
-			});
-
-			grid.applyLayout(screen);
-
-			screen.render();
 		}
 
 		cli.addHook('build.pre.construct', construct);
@@ -148,41 +51,65 @@ function construct(data, finished) {
 	tiapp.setModule('be.k0suke.tistats', '1.0.1', 'iphone');
 	tiapp.write();
 
+	var screen, grid, lines, datas;
+
 	if (!DEBUG) {
+		screen = blessed.screen();
 		screen.key(['escape', 'q', 'C-c'], function(ch, key){
 			var tiapp = tiappXml.load(path.join(data.projectDir, 'tiapp.xml'));
 			tiapp.removeModule('be.k0suke.tistats', 'iphone');
 			tiapp.write();
 
-			callback(true);
+			process.exit(0);
 		});
 
-		var lines = [
-			grid.get(0, 0),
-			grid.get(0, 1),
-			grid.get(1, 0),
-			grid.get(1, 1),
-			grid.get(2, 0),
-			grid.get(2, 1),
-			grid.get(3, 0),
-			grid.get(3, 1)
+		grid = new contrib.grid({
+				rows: 4,
+				cols: 2
+			});
+
+		_.each([
+				['Views in App', 'Free Memory [MB]'],
+				['Resident Size / msec [MB]', 'Resident Size [MB]'],
+				['Virtual Size / msec [MB]', 'Virtual Size [MB]'],
+				['User Time [msec]', 'System Time [msec]']
+			], function(rows, row){
+				_.each(rows, function(cols, col){
+					grid.set(row, col, contrib.line, {
+						style: {
+							line: 'yellow',
+							text: 'green',
+							baseline: 'black'
+						},
+						xLabelPadding: 10,
+						xPadding: 12,
+						label: ' ' + cols + ' '
+					});
+				});
+			});
+		grid.applyLayout(screen);
+		screen.render();
+
+		lines = [
+			grid.get(0, 0), grid.get(0, 1),
+			grid.get(1, 0), grid.get(1, 1),
+			grid.get(2, 0), grid.get(2, 1),
+			grid.get(3, 0), grid.get(3, 1)
 		];
 
-		var datas = [
-				{x: [], y: []},
-				{x: [], y: []},
-				{x: [], y: []},
-				{x: [], y: []},
-				{x: [], y: []},
-				{x: [], y: []},
-				{x: [], y: []},
-				{x: [], y: []}
+		datas = [
+				{x: [], y: []}, {x: [], y: []},
+				{x: [], y: []}, {x: [], y: []},
+				{x: [], y: []}, {x: [], y: []},
+				{x: [], y: []}, {x: [], y: []}
 			];
 
 		for (var i = 0; i < datas.length; i++) {
 			for (var j = 0; j < 20; j++) {
 				datas[i].x.push('0');
 				datas[i].y.push(0);
+				lines[i].setData('0', 0);
+				screen.render();
 			}
 		}
 	}
@@ -212,23 +139,13 @@ function construct(data, finished) {
 									datas[i - 1].y.push(_data < 0 ? 0 : _data);
 									break;
 								case 2:
-									datas[i - 1].y.push(_data < 0 ? 0 : Math.ceil(_data / 1024 / 1024));
-									break;
 								case 3:
-									datas[i - 1].y.push(_data < 0 ? 0 : Math.ceil(_data / 1024 / 1024));
-									break;
 								case 4:
-									datas[i - 1].y.push(_data < 0 ? 0 : Math.ceil(_data / 1024 / 1024));
-									break;
 								case 5:
-									datas[i - 1].y.push(_data < 0 ? 0 : Math.ceil(_data / 1024 / 1024));
-									break;
 								case 6:
 									datas[i - 1].y.push(_data < 0 ? 0 : Math.ceil(_data / 1024 / 1024));
 									break;
 								case 7:
-									datas[i - 1].y.push(_data < 0 ? 0 : Math.ceil(_data));
-									break;
 								case 8:
 									datas[i - 1].y.push(_data < 0 ? 0 : Math.ceil(_data));
 									break;
