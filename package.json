@@ -12,7 +12,9 @@
     "titanium",
     "cli",
     "appcelerator",
-    "hook"
+    "hook",
+    "stats",
+    "monitor"
   ],
   "repository": {
     "type": "git",
