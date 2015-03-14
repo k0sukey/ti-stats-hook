@@ -39,11 +39,16 @@ $ adb forward --remove tcp:8888
 
 ## Change log
 
-### 0.0.3
+### 0.0.4
 
 * **DRASTIC Change** build option ```--tistat localhost:8888``` to ```--debug-host localhost:8888 --tistats```
 * Change the Titanium CLI hook event
 * Android support in development
+
+
+### 0.0.3
+
+* Minor bug fix
 
 ### 0.0.2
 

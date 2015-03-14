@@ -1,6 +1,6 @@
 {
   "name": "ti-stats-hook",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "ti-stats-hook",
   "scripts": {
     "postinstall": "node bin/install"
